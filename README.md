@@ -2,6 +2,35 @@
 
 This project investigates the interaction between classical query expansion and neural re-ranking methods in Information Retrieval (IR).
 
+## Requirements
+
+Before running the notebook, make sure you have:
+
+- **Python 3.14**
+- **Java 11 or newer** (`python-terrier` requires Java)
+
+If Java is installed but not detected, set `JAVA_HOME` to your Java installation path.
+
+## Installation
+
+Create and activate a virtual environment, then install the dependencies:
+
+```bash
+python3.14 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+## Running
+
+Start Jupyter Notebook from the project root:
+
+```bash
+jupyter notebook
+```
+
+Then open `notebooks/experiments.ipynb`.
+
 ## Research Goal
 
 Both pseudo-relevance feedback (PRF) and neural re-ranking are commonly used to address the vocabulary mismatch problem. While both methods are effective individually, it is unclear how they interact and under which conditions query expansion helps or harms neural ranking.

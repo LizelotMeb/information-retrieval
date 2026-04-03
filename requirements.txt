@@ -1,0 +1,7 @@
+# Core notebook dependencies
+pandas==2.3.3
+python-terrier==1.0
+pyterrier-dr==0.7.0
+
+# Notebook runtime
+notebook>=7,<8
