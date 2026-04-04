@@ -62,6 +62,8 @@ The notebook is designed so you do not need to rerun everything every time.
 
 Use `FAST_MODE = True` while developing. This runs fewer topics and uses a smaller reranking depth. Switch to `FAST_MODE = False` only for the final full experiment run.
 
+The `results/cache/` directory is created locally by the notebook and is not tracked in Git. Each user should run the notebook once to generate their own cached result files.
+
 ## Research Goal
 
 Both pseudo-relevance feedback (PRF) and neural re-ranking are commonly used to address the vocabulary mismatch problem. While both methods are effective individually, it is unclear how they interact and under which conditions query expansion helps or harms neural ranking.
