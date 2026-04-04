@@ -5,3 +5,4 @@ pyterrier-dr==0.7.0
 
 # Notebook runtime
 notebook>=7,<8
+ipywidgets==8.1.7
