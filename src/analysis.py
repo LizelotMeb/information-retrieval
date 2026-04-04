@@ -87,3 +87,24 @@ def compare_query_sets(
     """Summarize average feature values for helped, hurt, and neutral queries."""
     selected = [label_column] + [column for column in feature_columns if column in comparison.columns]
     return comparison[selected].groupby(label_column, dropna=False).mean(numeric_only=True).reset_index()
+
+
+def best_system_per_query(
+    comparison: pd.DataFrame,
+    systems: Iterable[str],
+    output_column: str = "best_system",
+) -> pd.DataFrame:
+    """Mark the best-performing system per query."""
+    output = comparison.copy()
+    system_columns = [system for system in systems if system in output.columns]
+    output[output_column] = output[system_columns].idxmax(axis=1)
+    return output
+
+
+def summarize_best_systems(
+    comparison: pd.DataFrame,
+    best_system_column: str = "best_system",
+) -> pd.DataFrame:
+    """Count how often each system is best across queries."""
+    summary = comparison[best_system_column].value_counts(dropna=False).rename_axis(best_system_column)
+    return summary.reset_index(name="count")
