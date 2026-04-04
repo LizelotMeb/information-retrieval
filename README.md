@@ -6,17 +6,31 @@ This project investigates the interaction between classical query expansion and 
 
 Before running the notebook, make sure you have:
 
-- **Python 3.14**
+- **Python 3.12**
 - **Java 11 or newer** (`python-terrier` requires Java)
 
-If Java is installed but not detected, set `JAVA_HOME` to your Java installation path.
+
+## Java Setup
+
+`python-terrier` needs a working Java installation. A common failure case is that Java is installed, but `JAVA_HOME` is missing or points to the wrong location.
+
+Check whether Java is available:
+
+```bash
+java -version
+echo $JAVA_HOME
+```
+
+If `java -version` fails, install Java 11 or newer first.
+
+If Java is installed but PyTerrier still does not detect it, set `JAVA_HOME` explicitly.
 
 ## Installation
 
 Create and activate a virtual environment, then install the dependencies:
 
 ```bash
-python3.14 -m venv .venv
+python3.12 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
@@ -33,9 +47,10 @@ Then open `notebooks/experiments.ipynb`.
 
 ## How The Code Is Organized
 
-The project is split into two parts:
+The project is split into three parts:
 
 - `src/pipelines.py`: reusable helper code for building retrieval pipelines, caching ranking outputs, and comparing systems per query
+- `src/analysis.py`: helper code for lightweight query-level analysis, gain labels, and result summaries
 - `notebooks/experiments.ipynb`: the main notebook that imports those helpers and runs the experiments
 
 `src/pipelines.py` is used for:
@@ -44,6 +59,12 @@ The project is split into two parts:
 - caching pipeline outputs in `results/cache/` so expensive runs do not have to be repeated
 - evaluating saved runs without recomputing them
 - making per-query comparison tables
+
+`src/analysis.py` is used for:
+
+- adding simple query features
+- labeling queries as helped, hurt, or neutral
+- summarizing which systems perform best per query
 
 `notebooks/experiments.ipynb` is used for:
 
@@ -109,6 +130,7 @@ results/
 
 src/
     pipelines.py         # reusable pipeline, caching, and per-query helpers
+    analysis.py          # query-level analysis and summary helpers
 
 requirements.txt         # dependencies
 README.md
