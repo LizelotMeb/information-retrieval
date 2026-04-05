@@ -212,3 +212,11 @@ __marimo__/
 
 # Local experiment outputs
 results/cache/
+
+results/figures/fb_terms_sweep.pdf
+
+results/figures/fb_terms_sweep.png
+
+results/figures/per_query_gain_hist.pdf
+
+results/figures/per_query_gain_hist.png
