@@ -43,15 +43,29 @@ Start Jupyter Notebook from the project root:
 jupyter notebook
 ```
 
-Then open `notebooks/experiments.ipynb`.
+Then use the notebooks in this order:
+
+1. `notebooks/experiments.ipynb`
+2. `notebooks/analysis.ipynb`
+
+`experiments.ipynb` generates the cached result files in `results/cache/`.
+
+`analysis.ipynb` reads those cached files and performs the evaluation and query-level analysis.
 
 ## How The Code Is Organized
 
 The project is split into three parts:
 
+- `src/config.py`: shared experiment configuration used by both notebooks
 - `src/pipelines.py`: reusable helper code for building retrieval pipelines, caching ranking outputs, and comparing systems per query
 - `src/analysis.py`: helper code for lightweight query-level analysis, gain labels, and result summaries
-- `notebooks/experiments.ipynb`: the main notebook that imports those helpers and runs the experiments
+- `notebooks/experiments.ipynb`: notebook for loading data, building pipelines, and writing cached runs
+- `notebooks/analysis.ipynb`: notebook for evaluation, statistical tests, and query-level analysis
+
+`src/config.py` is used for:
+
+- keeping `FAST_MODE`, `FB_TERMS`, `FB_VALUES`, `RERANK_K`, and related settings in one place
+- making sure `experiments.ipynb` and `analysis.ipynb` use the same configuration
 
 `src/pipelines.py` is used for:
 
@@ -71,19 +85,27 @@ The project is split into three parts:
 - loading the datasets and Terrier index
 - choosing a fast or full configuration
 - calling the shared pipeline helpers
-- analyzing aggregate and per-query results
+- writing cached run files for DL19 and DL20
+
+`notebooks/analysis.ipynb` is used for:
+
+- loading cached run files from `results/cache/`
+- evaluating aggregate performance
+- running statistical tests
+- comparing different `fb_terms` settings
+- inspecting top improved and harmed queries
 
 ## Recommended Workflow
 
-The notebook is designed so you do not need to rerun everything every time.
+The notebooks are designed so you do not need to rerun everything every time.
 
-1. Run the setup and data-loading cells
-2. Run the cache-building cells once so ranking outputs are written to `results/cache/`
-3. Re-run only the evaluation and analysis cells when you want to compare systems or inspect specific queries
+1. Set the experiment parameters once in `src/config.py`
+2. Run `notebooks/experiments.ipynb` to generate the cached ranking outputs in `results/cache/`
+3. Run `notebooks/analysis.ipynb` when you want to compare systems or inspect specific queries
 
 Use `FAST_MODE = True` while developing. This runs fewer topics and uses a smaller reranking depth. Switch to `FAST_MODE = False` only for the final full experiment run.
 
-The `results/cache/` directory is created locally by the notebook and is not tracked in Git. Each user should run the notebook once to generate their own cached result files.
+The `results/cache/` directory is created locally and is not tracked in Git. Each user should run the experiments notebook once to generate their own cached result files.
 
 ## Research Goal
 
@@ -114,7 +136,8 @@ We use the **MS MARCO Passage** collection together with the **TREC Deep Learnin
 
 - `msmarco_passage` for the pre-built Terrier index
 - `irds:msmarco-passage` for document text lookup
-- `irds:msmarco-passage/trec-dl-2019/judged` for DL19 topics and qrels
+- `irds:msmarco-passage/trec-dl-2019/judged` for DL19 qrels
+- `irds:msmarco-passage/trec-dl-2019` for DL19 topics
 - `irds:msmarco-passage/trec-dl-2020/judged` for DL20 topics and qrels
 
 ---
@@ -123,12 +146,14 @@ We use the **MS MARCO Passage** collection together with the **TREC Deep Learnin
 
 ```text
 notebooks/
-    experiments.ipynb    # main notebook for running and analyzing experiments
+    experiments.ipynb    # runs experiments and writes cached result files
+    analysis.ipynb       # reads cached runs and performs evaluation/analysis
 
 results/
     cache/               # cached ranking outputs for reuse across runs
 
 src/
+    config.py            # shared configuration for both notebooks
     pipelines.py         # reusable pipeline, caching, and per-query helpers
     analysis.py          # query-level analysis and summary helpers
 
